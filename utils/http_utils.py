@@ -99,10 +99,6 @@ class HTTPClient(object):
         header = urls.get("header", {})
         self.resetHeaders()
         self.setHeaders(header)
-        if data is not None:
-            self.setHeaders({"Content-Length": "{0}".format(len(data))})
-        else:
-            self.resetHeaders()
 
         for i in range(re_try):
             try:

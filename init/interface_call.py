@@ -7,6 +7,7 @@ from utils.http_utils import HTTPClient
 from LgbConfig import MIN_TIME, MAX_TIME
 from utils.find_ansers import FindAnswers
 from LgbConfig import CORRECT_ANSWER_NUM
+from LgbConfig import ONLY_QUERYINFO, QUERYINFO_WRITE_FILE, QUERYINFO_WRITE_FILE_PATH
 
 
 class InterfaceCall:
@@ -74,8 +75,10 @@ class InterfaceCall:
         quesTypeStr = ques.get("quesTypeStr")
         content = ques.get("content")
         answerOptions = ques.get("options")
-        _, answer_ = self.find_answers.get_result(quesTypeStr, content, answerOptions)
-        print("running:", quesid_, quesTypeStr, content, answerOptions, answer_)
+        _, answer_ = self.find_answers.get_result(
+            quesTypeStr, content, answerOptions)
+        print("running:", str(self.answer_ques_num+1), quesTypeStr,
+              content, answerOptions, answer_)
         if all([quesid_, answer_]):
             return quesid_, answer_
         else:
@@ -90,10 +93,30 @@ class InterfaceCall:
                         retry_flag = True
             return quesid_, self.find_answers.option2text(list(t_str), answerOptions)
 
+    def query_account_info(self):
+        self.result_dict = self.http_client.send(URLS['competition'])
+        data = self.result_dict.get('data')
+        if not data:  # 无数据
+            return
+        memberName = '姓名:' + data.get('memberName')
+        mobile = '手机号码:' + data.get('mobile')
+        points = '我的积分:' + str(data.get('points'))
+        thirdEnterpriseName = '单位信息:' + data.get('thirdEnterpriseName')
+        self.result_dict = self.http_client.send(
+            URLS['getdrawsurplusnum'], data={})
+        surplusNum = '剩余抽奖次数:' + self.result_dict.get('data').get('surplusNum')
+        print(memberName, mobile, points, thirdEnterpriseName, surplusNum)
+        if QUERYINFO_WRITE_FILE:
+            with open(QUERYINFO_WRITE_FILE_PATH, 'a', encoding='utf-8') as f:
+                t_str = ' '.join((memberName, mobile, points,
+                                 thirdEnterpriseName, surplusNum))
+                f.write(t_str + '\n')
+
     def task(self):
         self.login()
-        if self.start():
+        if not ONLY_QUERYINFO and self.start():
             self.answer()
+        self.query_account_info()
         self.http_client.del_cookies()
         self.http_client.rand_ua()
         time.sleep(random.randint(MIN_TIME, MAX_TIME))

@@ -39,10 +39,6 @@ def parser_arguments():
 
 
 if __name__ == '__main__':
-    sys.stdout = Logger('info.log')
-    sys.stderr = sys.stdout
-    print('+++++++++++++++++++++++++++++++++++++++++++++')
-    print(time.strftime('%Y-%m-%d %H:%M:%S'))
     parser = parser_arguments()
     args = parser.parse_args(sys.argv[1:])
     if args.interface_call:
@@ -58,6 +54,10 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(0)
 
+    sys.stdout = Logger('info.log')
+    sys.stderr = sys.stdout
+    print('+++++++++++++++++++++++++++++++++++++++++++++')
+    print(time.strftime('%Y-%m-%d %H:%M:%S'))
     for ac in ACCOUNT:
         user = ac.get("USER")
         passwd = ac.get("PWD")

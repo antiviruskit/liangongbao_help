@@ -4,16 +4,19 @@ ACCOUNT = [
     # {'USER': '', 'PWD': ''},
 ]
 
+# 仅查询用户信息不进入答题：积分，抽奖信息等值为'True，默认值为'False'进入答题
+ONLY_QUERYINFO = True
+# 查询到的用户信息写入文件值默认为'True',不写入为'False'
+QUERYINFO_WRITE_FILE = True
+QUERYINFO_WRITE_FILE_PATH = 'user_info.txt'
+
 # winodws文件夹分隔符 '\' unix 文件夹分隔符 '/'，可以给绝对路径
 # Excel 题库
 EXCEL_QUESTION_BANK_PATH = r'question_bank\6_21.xls'
-
 # TXT 题库
 ANSWER_QUESTION_BANK_PATH = r'question_bank\answers.txt'
-
 # 文章 题库
 PAPER_QUESTION_BANK_PATH = r'question_bank\wenzhang.txt'
-
 # 错题收集本
 WRONG_QUESTIONS_PATH = r'question_bank\wrong_questions.txt'
 

@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from LgbConfig import CHROME_CHROME_PATH, CHROME_TIMEOUT
 from LgbConfig import MIN_TIME, MAX_TIME
 from LgbConfig import CORRECT_ANSWER_NUM
+from LgbConfig import ONLY_QUERYINFO, QUERYINFO_WRITE_FILE, QUERYINFO_WRITE_FILE_PATH
 
 
 class Visualization:
@@ -114,7 +115,8 @@ class Visualization:
             return True
         check_txt = '恭喜您！答对15道题目'
         tip = '每天只能挑战一次哦~'
-        check_elements = ['question-type', 'topic', 'question-text', 'questionBox', 'question-answer']
+        check_elements = ['question-type', 'topic',
+                          'question-text', 'questionBox', 'question-answer']
         html = self.browser.page_source
         if check_txt in html:
             print("<------恭喜您，满分！！！------>")
@@ -130,7 +132,7 @@ class Visualization:
 
     def find_answer_element(self):
         question_type = self.browser.find_element(
-                By.CLASS_NAME, "question-type").find_element(By.XPATH, ".//span").text
+            By.CLASS_NAME, "question-type").find_element(By.XPATH, ".//span").text
         topic = self.browser.find_element(By.CLASS_NAME, "topic").find_element(
             By.CLASS_NAME, "question-text").text
         question_answer = self.browser.find_element(By.CLASS_NAME, "questionBox").find_element(
@@ -158,7 +160,8 @@ class Visualization:
                     By.CLASS_NAME, "submission").find_element(By.XPATH, ".//a")
                 self.exec_script_click(submit, -1)
             self.wait_get_url_done()
-            tips = self.browser.find_element(By.CLASS_NAME, "Tips").find_element(By.CLASS_NAME, "Continue").find_element(By.XPATH, ".//a")
+            tips = self.browser.find_element(By.CLASS_NAME, "Tips").find_element(
+                By.CLASS_NAME, "Continue").find_element(By.XPATH, ".//a")
             self.exec_script_click(tips, -1)
             self.wait_get_url_done()
             self.answer_ques_num += 1  # 答题数+1
@@ -177,7 +180,8 @@ class Visualization:
                          for key in question_answer]
         answer_, _ = self.find_answers.get_result(
             quesTypeStr, content, answerOptions)
-        print("running:", quesid_, quesTypeStr, content, answerOptions, answer_)
+        print("running:", quesid_, quesTypeStr,
+              content, answerOptions, answer_)
         if all([quesid_, answer_]):
             return quesid_, answer_
         else:
@@ -192,13 +196,47 @@ class Visualization:
                         retry_flag = True
             return quesid_, list(t_str)
 
+    def query_account_info(self):
+        self.browser.get(URLS['web_home']['req_url'])
+        self.wait_get_url_done()
+        check_elements = ['challenge-box',
+                          'challenge-info', 'competition-rank']
+        html = self.browser.page_source
+        if not all([True if item in html else False for item in check_elements]):
+            print("======无数据，无法查询信息======")
+            return  # 无数据
+        self.browser.find_element(By.CLASS_NAME, 'competition-rank').click()
+        self.wait_get_url_done()
+        challenge_infos = self.browser.find_element(
+            By.CLASS_NAME, "challenge-box").find_elements(By.CLASS_NAME, "challenge-info")
+        memberName = '姓名:' + \
+            challenge_infos[0].find_element(By.XPATH, ".//span/b").text
+        mobile = '手机号码:' + \
+            challenge_infos[1].find_element(
+                By.XPATH, ".//span").text.split(' ')[-1]
+        points = '我的积分:' + \
+            challenge_infos[0].find_elements(
+                By.XPATH, ".//span")[-1].text.split('：')[-1]
+        surplusNum = '剩余抽奖次数:' + \
+            challenge_infos[1].find_elements(
+                By.XPATH, ".//span")[-1].text.split('：')[-1]
+        thirdEnterpriseName = '单位信息:' + self.browser.find_elements(
+            By.CLASS_NAME, "table-list")[-1].find_element(By.CLASS_NAME, 'list-area').text
+        print(memberName, mobile, points, thirdEnterpriseName, surplusNum)
+        if QUERYINFO_WRITE_FILE:
+            with open(QUERYINFO_WRITE_FILE_PATH, 'a', encoding='utf-8') as f:
+                t_str = ' '.join((memberName, mobile, points,
+                                 thirdEnterpriseName, surplusNum))
+                f.write(t_str + '\n')
+
     def task(self):
         self.browser = WebDriver(load_images=True, driver_type=WebDriver.CHROME,
                                  timeout=CHROME_TIMEOUT, executable_path=CHROME_CHROME_PATH)
         self.browser.implicitly_wait(CHROME_TIMEOUT)
         self.login()
-        if self.start():
+        if not ONLY_QUERYINFO and self.start():
             self.answer()
+        self.query_account_info()
         self.browser.quit()
 
     def main(self, user, passwd):
