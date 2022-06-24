@@ -8,3 +8,4 @@ pytesseract
 requests
 selenium
 webdriver_manager
+xlrd
