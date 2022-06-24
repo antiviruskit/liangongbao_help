@@ -35,9 +35,9 @@ ADB_DEVICE_SERIAL = "xxxxxxxx"
 
 # 保护官网请求频率，设置随机请求时间
 # 最大间隔请求时间
-MAX_TIME = 6
+MAX_TIME = 5
 # 最小间隔请求时间
-MIN_TIME = 3
+MIN_TIME = 2
 
 # 软件版本
-RE_VERSION = '0.0.001'
+RE_VERSION = '2022.06.25'
