@@ -102,10 +102,13 @@ class InterfaceCall:
         mobile = '手机号码:' + data.get('mobile')
         points = '我的积分:' + str(data.get('points'))
         thirdEnterpriseName = '单位信息:' + data.get('thirdEnterpriseName')
+        surplusNum = data.get('drawNum')
         self.result_dict = self.http_client.send(
             URLS['getdrawsurplusnum'], data={})
-        surplusNum = '剩余抽奖次数:' + self.result_dict.get('data').get('surplusNum')
-        print(memberName, mobile, points, thirdEnterpriseName, surplusNum)
+        surplusNum_retry = int(self.result_dict.get('data').get('surplusNum'))
+        surplusNum = max(surplusNum, surplusNum_retry)
+        surplusNum = '剩余抽奖次数:' + str(surplusNum)
+        print(memberName, mobile, points, thirdEnterpriseName, surplusNum, str(surplusNum_retry))
         if QUERYINFO_WRITE_FILE:
             with open(QUERYINFO_WRITE_FILE_PATH, 'a', encoding='utf-8') as f:
                 t_str = ' '.join((memberName, mobile, points,
