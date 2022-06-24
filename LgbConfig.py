@@ -1,9 +1,10 @@
 # lgb登录账号
 ACCOUNT = [
-    {'USER': '', 'PWD': ''},
+    {'USER': '13888888888', 'PWD': 'password'},
     # {'USER': '', 'PWD': ''},
 ]
 
+# winodws文件夹分隔符 '\' unix 文件夹分隔符 '/'，可以给绝对路径
 # Excel 题库
 EXCEL_QUESTION_BANK_PATH = r'question_bank\6_21.xls'
 
@@ -16,11 +17,15 @@ PAPER_QUESTION_BANK_PATH = r'question_bank\wenzhang.txt'
 # 错题收集本
 WRONG_QUESTIONS_PATH = r'question_bank\wrong_questions.txt'
 
+# 随机答对题数,默认全部作答,给定值大于答题数目即可
+# import random;CORRECT_ANSWER_NUM = random.randint(11,16)  #随机取消注释
+# CORRECT_ANSWER_NUM = 15   # 指定确定作答数目
+CORRECT_ANSWER_NUM = 9999
+
 # 不自动安装chrome请设置这个参数
 # CHROME_CHROME_PATH = r'.wdm\drivers\chromedriver\win32\x.x.x\chromedriver.exe'
 CHROME_CHROME_PATH = None
 CHROME_TIMEOUT = 15
-
 
 # adb devices 命令得到的手机序列号
 ADB_DEVICE_SERIAL = "xxxxxxxx"

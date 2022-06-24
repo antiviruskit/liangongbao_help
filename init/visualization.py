@@ -12,6 +12,7 @@ from utils.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from LgbConfig import CHROME_CHROME_PATH, CHROME_TIMEOUT
 from LgbConfig import MIN_TIME, MAX_TIME
+from LgbConfig import CORRECT_ANSWER_NUM
 
 
 class Visualization:
@@ -21,6 +22,7 @@ class Visualization:
         self.http_client = HTTPClient()
         self.find_answers = FindAnswers()
         self.question_answer_postion = {}
+        self.answer_ques_num = 0
         for i in range(26):
             self.question_answer_postion[chr(65+i)] = i
         self.result_dict = None
@@ -106,26 +108,41 @@ class Visualization:
             re_try -= 1
             print("尝试登录中:", URLS['web_login']['re_try'] - re_try)
 
-    def answer(self):
+    def judge_finish(self) -> bool:
+        if self.answer_ques_num >= CORRECT_ANSWER_NUM:
+            print("======已达设定最大答题数目,答题结束======")
+            return True
         check_txt = '恭喜您！答对15道题目'
         tip = '每天只能挑战一次哦~'
+        check_elements = ['question-type', 'topic', 'question-text', 'questionBox', 'question-answer']
+        html = self.browser.page_source
+        if check_txt in html:
+            print("<------恭喜您，满分！！！------>")
+            return True
+        if not all([True if item in html else False for item in check_elements]):
+            print("======服务器返回异常,账号答题结束======")
+            return True
+        question_type, topic, question_answer = self.find_answer_element()
+        if not all([question_type, topic, question_answer]):
+            print(tip)
+            return True
+        return False
+
+    def find_answer_element(self):
+        question_type = self.browser.find_element(
+                By.CLASS_NAME, "question-type").find_element(By.XPATH, ".//span").text
+        topic = self.browser.find_element(By.CLASS_NAME, "topic").find_element(
+            By.CLASS_NAME, "question-text").text
+        question_answer = self.browser.find_element(By.CLASS_NAME, "questionBox").find_element(
+            By.CLASS_NAME, "question-answer").find_elements(By.CLASS_NAME, "foo-answer")
+        return question_type, topic, question_answer
+
+    def answer(self):
         if self.browser.current_url != URLS['web_answer']['req_url']:
             self.browser.get(URLS['web_answer']['req_url'])
             self.wait_get_url_done()
-        while True:
-            html = self.browser.page_source
-            if check_txt in html:
-                print(check_txt)
-                break
-            question_type = self.browser.find_element(
-                By.CLASS_NAME, "question-type").find_element(By.XPATH, ".//span").text
-            topic = self.browser.find_element(By.CLASS_NAME, "topic").find_element(
-                By.CLASS_NAME, "question-text").text
-            question_answer = self.browser.find_element(By.CLASS_NAME, "questionBox").find_element(
-                By.CLASS_NAME, "question-answer").find_elements(By.CLASS_NAME, "foo-answer")
-            if not all([question_type, topic, question_answer]):
-                print(tip)
-                break
+        while not self.judge_finish():
+            question_type, topic, question_answer = self.find_answer_element()
             quesid_, answer_ = self.get_correct_answer(
                 question_type, topic, question_answer)
 
@@ -144,11 +161,15 @@ class Visualization:
             tips = self.browser.find_element(By.CLASS_NAME, "Tips").find_element(By.CLASS_NAME, "Continue").find_element(By.XPATH, ".//a")
             self.exec_script_click(tips, -1)
             self.wait_get_url_done()
+            self.answer_ques_num += 1  # 答题数+1
             time.sleep(random.randint(MIN_TIME, MAX_TIME))
 
     def get_correct_answer(self, question_type, topic, question_answer):
         quesid_ = ''
         answer_ = []
+
+        if self.judge_finish():
+            return quesid_, answer_
 
         quesTypeStr = question_type
         quesid_, content = topic.split('.')

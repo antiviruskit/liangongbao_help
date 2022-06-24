@@ -6,6 +6,7 @@ from config.url_conf import URLS
 from utils.http_utils import HTTPClient
 from LgbConfig import MIN_TIME, MAX_TIME
 from utils.find_ansers import FindAnswers
+from LgbConfig import CORRECT_ANSWER_NUM
 
 
 class InterfaceCall:
@@ -14,6 +15,7 @@ class InterfaceCall:
         self.passwd = ""
         self.http_client = HTTPClient()
         self.find_answers = FindAnswers()
+        self.answer_ques_num = 0
         self.result_dict = None
 
     def login(self):
@@ -29,7 +31,6 @@ class InterfaceCall:
 
     def start(self) -> bool:
         self.result_dict = self.http_client.send(URLS['start'], {})
-        print(self.result_dict)
         msg = self.result_dict.get("result").get("msg")
         code = self.result_dict.get("result").get("code")
         if msg == "每天只能挑战一次哦~" and code == 9:
@@ -38,17 +39,19 @@ class InterfaceCall:
         return True
 
     def judge_finish(self) -> bool:
+        if self.answer_ques_num >= CORRECT_ANSWER_NUM:
+            print("======已达设定最大答题数目,答题结束======")
+            return True
         data = self.result_dict.get("data")
-        if data:
-            ques = data.get("ques")
-            if not ques:
-                print("<------恭喜您，满分！！！------>")
-            else:
-                return False
-        else:
+        if not data:
             print(self.result_dict)
-            print("======账号答题结束======")
-        return True
+            print("======服务器返回异常,账号答题结束======")
+            return True
+        ques = data.get("ques")
+        if not ques:
+            print("<------恭喜您，满分！！！------>")
+            return True
+        return False
 
     def answer(self):
         while not self.judge_finish():
@@ -56,6 +59,7 @@ class InterfaceCall:
             data = {"quesId": "%s" % quesid_, "answerOptions": answer_}
             self.result_dict = self.http_client.send(
                 URLS['answer'], data=json.dumps(data))
+            self.answer_ques_num += 1  # 答题数+1
             time.sleep(random.randint(MIN_TIME, MAX_TIME))
 
     def get_correct_answer(self):
@@ -91,7 +95,7 @@ class InterfaceCall:
         if self.start():
             self.answer()
         self.http_client.del_cookies()
-        self.http_client.ranf_ua()
+        self.http_client.rand_ua()
         time.sleep(random.randint(MIN_TIME, MAX_TIME))
 
     def main(self, user, passwd):

@@ -23,7 +23,7 @@ class HTTPClient(object):
     def initS(self):
         return self
     
-    def ranf_ua(self):
+    def rand_ua(self):
         self._ua = set_user_agent()
 
     def set_cookies(self, kwargs):
