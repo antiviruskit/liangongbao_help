@@ -122,6 +122,7 @@ class InterfaceCall:
         time.sleep(random.randint(MIN_TIME, MAX_TIME))
 
     def main(self, user, passwd):
+        self.answer_ques_num = 0
         self.user = user
         self.passwd = passwd
         self.task()

@@ -240,6 +240,7 @@ class Visualization:
         self.browser.quit()
 
     def main(self, user, passwd):
+        self.answer_ques_num = 0
         self.user = user
         self.passwd = passwd
         self.task()
