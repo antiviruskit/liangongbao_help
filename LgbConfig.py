@@ -10,6 +10,9 @@ ONLY_QUERYINFO = True
 QUERYINFO_WRITE_FILE = True
 QUERYINFO_WRITE_FILE_PATH = 'user_info.txt'
 
+# 是否自动抽奖，自动抽奖失去快乐 是为True, 否为False
+AUTO_LOTTERY = False
+
 # winodws文件夹分隔符 '\' unix 文件夹分隔符 '/'，可以给绝对路径
 # Excel 题库
 EXCEL_QUESTION_BANK_PATH = r'question_bank\6_21.xls'

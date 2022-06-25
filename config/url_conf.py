@@ -111,7 +111,7 @@ URLS = {
         },
     },
     "drawprize": {  # 自动抽奖
-        "req_url": "https://aqy-app.lgb360.com//aqy/prize/drawPrize",
+        "req_url": "https://aqy-app.lgb360.com/aqy/prize/drawPrize",
         "req_type": "post",
         "re_try": 10,
         "re_time": 3,

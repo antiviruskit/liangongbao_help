@@ -8,6 +8,7 @@ from LgbConfig import MIN_TIME, MAX_TIME
 from utils.find_ansers import FindAnswers
 from LgbConfig import CORRECT_ANSWER_NUM
 from LgbConfig import ONLY_QUERYINFO, QUERYINFO_WRITE_FILE, QUERYINFO_WRITE_FILE_PATH
+from LgbConfig import AUTO_LOTTERY
 
 
 class InterfaceCall:
@@ -101,25 +102,51 @@ class InterfaceCall:
         memberName = '姓名:' + data.get('memberName')
         mobile = '手机号码:' + data.get('mobile')
         points = '我的积分:' + str(data.get('points'))
-        thirdEnterpriseName = '单位信息:' + data.get('thirdEnterpriseName')
-        surplusNum = data.get('drawNum')
+        userCategory = data.get('userCategory')
+        if userCategory == 1:
+            EnterpriseName = '单位信息:' + data.get('thirdEnterpriseName')
+        elif userCategory == 2:
+            EnterpriseName = '单位信息:' + data.get('deptName')
+        else:
+            EnterpriseName = '单位信息:*'
+        surplusNum = int(data.get('drawNum', None)) if data.get(
+            'drawNum') is not None else -1
         self.result_dict = self.http_client.send(
             URLS['getdrawsurplusnum'], data={})
         surplusNum_retry = int(self.result_dict.get('data').get('surplusNum'))
         surplusNum = max(surplusNum, surplusNum_retry)
         surplusNum = '剩余抽奖次数:' + str(surplusNum)
-        print(memberName, mobile, points, thirdEnterpriseName, surplusNum, str(surplusNum_retry))
+        print(memberName, mobile, points, EnterpriseName,
+              surplusNum, str(surplusNum_retry))
         if QUERYINFO_WRITE_FILE:
             with open(QUERYINFO_WRITE_FILE_PATH, 'a', encoding='utf-8') as f:
                 t_str = ' '.join((memberName, mobile, points,
-                                 thirdEnterpriseName, surplusNum))
+                                 EnterpriseName, surplusNum))
                 f.write(t_str + '\n')
+
+    def auto_lottery(self):
+        if not AUTO_LOTTERY:
+            return
+        self.result_dict = self.http_client.send(
+            URLS['getdrawsurplusnum'], data={})
+        surplusNum = int(self.result_dict.get('data').get('surplusNum'))
+        if surplusNum == 0:
+            print("您的抽奖次数已用完！")
+        for i in range(surplusNum):
+            self.result_dict = self.http_client.send(URLS['drawprize'], data={})
+            data = self.result_dict.get('data')
+            if not data:  # 无数据
+                print("您的抽奖次数已用完！")
+                return
+            prizeName = data.get('prizeName')
+            print('第%s次抽奖获得:' % (i+1), prizeName)
 
     def task(self):
         self.login()
         if not ONLY_QUERYINFO and self.start():
             self.answer()
         self.query_account_info()
+        self.auto_lottery()
         self.http_client.del_cookies()
         self.http_client.rand_ua()
         time.sleep(random.randint(MIN_TIME, MAX_TIME))
