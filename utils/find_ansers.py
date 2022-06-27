@@ -119,8 +119,9 @@ class FindAnswers:
         questions = ''
         answer_match = []
         for v in self.answer_question_bank:
-            questions, answer_match = v[0], v[1]
+            questions, tmp_answer_match = v[0], v[1]
             if res == questions:
+                answer_match = tmp_answer_match
                 break
         return self.text2option(answer_match, answerOptions), answer_match
 

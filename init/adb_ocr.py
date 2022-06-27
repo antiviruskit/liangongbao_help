@@ -26,12 +26,15 @@ class ADBOCR:
     def answer(self):
         xmin, ymin, xmax, ymax = 50, 700, 1030, 1100  # 题目框
         context_coordinate = (xmin, ymin, xmax, ymax)
+        xmin, ymin, xmax, ymax = 120, 620, 260, 680  # 题型框
+        qurs_type_coordinate = (xmin, ymin, xmax, ymax)
         img_rgb = self.adb.screencap()
         context = self.identify(img_rgb, context_coordinate)
+        quesTypeStr = self.identify(img_rgb, qurs_type_coordinate)
         if len(context) > 90:
             context = context[:90]
         print('识别文字: ',context)
-        res = self.find_answers.get_result('未知', context, ['未知', '未知'])
+        res = self.find_answers.get_result(quesTypeStr, context, [str(i) for i in range(5)])
         print("正常查找：", res)
         self.find_answers.find_jieba(context)
         

@@ -62,7 +62,7 @@ class HTTPClient(object):
             headers['token'] = self.token
         if 'memberId' in headers:
             headers['memberId'] = self.memberId
-        if 'User-Agent' in headers:
+        if 'User-Agent' in headers and headers['User-Agent'] == '':
             headers['User-Agent'] = self._ua
         self._s.headers.update(headers)
 

@@ -32,7 +32,11 @@ class InterfaceCall:
             print(token_dict)
 
     def start(self) -> bool:
-        self.result_dict = self.http_client.send(URLS['start'], {})
+        self.result_dict = self.http_client.send(URLS['competition'])
+        if 'isAnswered' in self.result_dict.get('data'):
+            print("每天只能挑战一次哦~")
+            return False
+        self.result_dict = self.http_client.send(URLS['start'], data={})
         msg = self.result_dict.get("result").get("msg")
         code = self.result_dict.get("result").get("code")
         if msg == "每天只能挑战一次哦~" and code == 9:
@@ -64,6 +68,10 @@ class InterfaceCall:
             self.answer_ques_num += 1  # 答题数+1
             time.sleep(random.randint(MIN_TIME, MAX_TIME))
 
+    def submit_competition(self):
+        self.result_dict = self.http_client.send(URLS['submitcompetition'], data={})
+        print('本次答对题目数：', self.result_dict.get('data').get("correctNum"))
+        
     def get_correct_answer(self):
         quesid_ = ""
         answer_ = []
@@ -145,6 +153,7 @@ class InterfaceCall:
         self.login()
         if not ONLY_QUERYINFO and self.start():
             self.answer()
+            self.submit_competition()
         self.query_account_info()
         self.auto_lottery()
         self.http_client.del_cookies()

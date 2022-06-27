@@ -64,6 +64,29 @@ URLS = {
             "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
         },
     },
+    "submitcompetition": {  # 答题结束提交接口
+        "req_url": "https://aqy-app.lgb360.com/aqy/ques/submitCompetition",
+        "req_type": "post",
+        "re_try": 10,
+        "re_time": 3,
+        "s_time": 0.1,
+        "is_json": True,
+        "header": {
+            "Host": "aqy-app.lgb360.com",
+            "accept": "application/json, text/plain, */*",
+            "token": "",
+            "User-Agent": "",
+            "memberId": "",
+            "content-type": "application/json;charset=UTF-8",
+            "origin": "https://aqy-app.lgb360.com",
+            "x-requested-with": "com.hxak.liangongbao",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate",
+            "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+    },
     "competition": {  # 查询接口
         "req_url": "https://aqy-app.lgb360.com/aqy/regist/competition",
         "req_type": "get",
