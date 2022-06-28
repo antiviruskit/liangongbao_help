@@ -110,6 +110,29 @@ URLS = {
             "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
         },
     },
+    "getrank": {  # 查询排名接口
+        "req_url": "https://aqy-app.lgb360.com/aqy/score/getRank",
+        "req_type": "post",
+        "re_try": 10,
+        "re_time": 3,
+        "s_time": 0.1,
+        "is_json": True,
+        "header": {
+            "Host": "aqy-app.lgb360.com",
+            "accept": "application/json, text/plain, */*",
+            "token": "",
+            "User-Agent": "",
+            "memberId": "",
+            "content-type": "application/json;charset=UTF-8",
+            "origin": "https://aqy-app.lgb360.com",
+            "x-requested-with": "com.hxak.liangongbao",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate",
+            "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+        },
+    },
     "getdrawsurplusnum": {  # 查询抽奖次数接口
         "req_url": "https://aqy-app.lgb360.com/aqy/prize/getDrawSurplusNum",
         "req_type": "post",

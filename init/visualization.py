@@ -222,12 +222,19 @@ class Visualization:
                 By.XPATH, ".//span")[-1].text.split('：')[-1]
         thirdEnterpriseName = '单位信息:' + self.browser.find_elements(
             By.CLASS_NAME, "table-list")[-1].find_element(By.CLASS_NAME, 'list-area').text
-        print(memberName, mobile, points, thirdEnterpriseName, surplusNum)
+        table_list = self.browser.find_elements(By.CLASS_NAME, "table-list")
+        rank_str = ' '
+        for v in table_list:
+            area = v.find_element(By.CLASS_NAME, 'list-area').text
+            rank = v.find_element(By.CLASS_NAME, 'list-ranking').text
+            rank_str += area + ':' + rank
+            rank_str += ' '
+        print(memberName, mobile, points, thirdEnterpriseName, surplusNum, rank_str)
         if QUERYINFO_WRITE_FILE:
             with open(QUERYINFO_WRITE_FILE_PATH, 'a', encoding='utf-8') as f:
                 t_str = ' '.join((memberName, mobile, points,
                                  thirdEnterpriseName, surplusNum))
-                f.write(t_str + '\n')
+                f.write(t_str + rank_str + '\n')
 
     def task(self):
         self.browser = WebDriver(load_images=True, driver_type=WebDriver.CHROME,

@@ -102,6 +102,21 @@ class InterfaceCall:
                         retry_flag = True
             return quesid_, self.find_answers.option2text(list(t_str), answerOptions)
 
+    def query_account_rank(self):
+        send_data = {'date': time.strftime('%Y-%m-%d')}
+        self.result_dict = self.http_client.send(URLS['getrank'], data=send_data)
+        data = self.result_dict.get('data')
+        if not data:  # 无数据
+            return
+        query_list = ['area', 'dept']
+        rank_str = ' '
+        for v in query_list:
+            v_tmp_list = data.get(v)
+            for tmp in v_tmp_list:
+                rank_str += tmp.get(v+'Name') + ':' + str(tmp.get('todayRank')) + '名'
+                rank_str += ' '
+        return rank_str
+
     def query_account_info(self):
         self.result_dict = self.http_client.send(URLS['competition'])
         data = self.result_dict.get('data')
@@ -124,13 +139,13 @@ class InterfaceCall:
         surplusNum_retry = int(self.result_dict.get('data').get('surplusNum'))
         surplusNum = max(surplusNum, surplusNum_retry)
         surplusNum = '剩余抽奖次数:' + str(surplusNum)
-        print(memberName, mobile, points, EnterpriseName,
-              surplusNum, str(surplusNum_retry))
+        rank_str = self.query_account_rank()
+        print(memberName, mobile, points, EnterpriseName, surplusNum, rank_str)
         if QUERYINFO_WRITE_FILE:
             with open(QUERYINFO_WRITE_FILE_PATH, 'a', encoding='utf-8') as f:
                 t_str = ' '.join((memberName, mobile, points,
                                  EnterpriseName, surplusNum))
-                f.write(t_str + '\n')
+                f.write(t_str + rank_str + '\n')
 
     def auto_lottery(self):
         if not AUTO_LOTTERY:
@@ -148,6 +163,7 @@ class InterfaceCall:
                 return
             prizeName = data.get('prizeName')
             print('第%s次抽奖获得:' % (i+1), prizeName)
+            time.sleep(random.randint(MIN_TIME, MAX_TIME))
 
     def task(self):
         self.login()
