@@ -4,7 +4,7 @@ ACCOUNT = [
     # {'USER': '', 'PWD': ''},
 ]
 
-# 仅查询用户信息不进入答题：积分，抽奖信息等值为'True，默认值为'False'进入答题
+# 仅查询用户信息不进入答题：积分，抽奖信息等值为'True'，进入答题为'False'
 ONLY_QUERYINFO = True
 # 查询到的用户信息写入文件值默认为'True',不写入为'False'
 QUERYINFO_WRITE_FILE = True

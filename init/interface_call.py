@@ -127,9 +127,11 @@ class InterfaceCall:
         points = '我的积分:' + str(data.get('points'))
         userCategory = data.get('userCategory')
         if userCategory == 1:
-            EnterpriseName = '单位信息:' + data.get('thirdEnterpriseName')
+            t_get_list = [item for item in ['thirdEnterpriseName', 'secondEnterpriseName', 'firstEnterpriseName'] if item in data]
+            has_enterprise = '' if not t_get_list else t_get_list[0]
+            EnterpriseName = '单位信息:' + data.get(has_enterprise, '')
         elif userCategory == 2:
-            EnterpriseName = '单位信息:' + data.get('deptName')
+            EnterpriseName = '单位信息:' + data.get('deptName', '')
         else:
             EnterpriseName = '单位信息:*'
         surplusNum = int(data.get('drawNum', None)) if data.get(
