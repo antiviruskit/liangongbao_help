@@ -170,8 +170,8 @@ class InterfaceCall:
         if not ONLY_QUERYINFO and self.start():
             self.answer()
             self.submit_competition()
-        self.query_account_info()
         self.auto_lottery()
+        self.query_account_info()
         self.http_client.del_cookies()
         self.http_client.rand_ua()
         time.sleep(random.randint(MIN_TIME, MAX_TIME))
