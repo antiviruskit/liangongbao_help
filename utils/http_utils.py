@@ -129,12 +129,12 @@ class HTTPClient(object):
                             f"url: {urls['req_url']}返回参数为空, 接口状态码: {response.status_code}")
                         continue
                 else:
-                    print(response.status_code)
+                    print(f"url: {urls['req_url']}访问错误, 接口状态码: {response.status_code}")
                     sleep(urls["re_time"])
             except (requests.exceptions.Timeout, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError):
                 pass
-                traceback.print_exc()
+                # traceback.print_exc()
             except socket.error:
                 pass
-                traceback.print_exc()
+                # traceback.print_exc()
         return error_data

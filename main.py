@@ -30,11 +30,13 @@ def parser_arguments():
     """
     parser = argparse.ArgumentParser(description='链工宝让平凡的人懂得安全生产')
     parser.add_argument('-i', '--interface_call', action='store_true',
-                        default=False, help='使用接口POST/GET运行')
+                        default=False, help='2022使用接口POST/GET运行')
     parser.add_argument('-v', '--visualization', action='store_true',
-                        default=False, help='使用浏览器可视化运行')
+                        default=False, help='2022使用浏览器可视化运行')
     parser.add_argument('-a', '--adb_ocr', action='store_true',
-                        default=False, help='使用ADB工具连接手机运行')
+                        default=False, help='2022使用ADB工具连接手机运行')
+    parser.add_argument('-w', '--weixin', action='store_true',
+                        default=False, help='2023使用Wechat登录运行')
     return parser
 
 
@@ -50,6 +52,9 @@ if __name__ == '__main__':
     elif args.adb_ocr:
         from init.adb_ocr import ADBOCR
         app = ADBOCR()
+    elif args.weixin:
+        from init.weixin import WEIXIN
+        app = WEIXIN()
     else:
         parser.print_help()
         sys.exit(0)

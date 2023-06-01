@@ -1,11 +1,11 @@
 # lgb登录账号
 ACCOUNT = [
-    {'USER': '13888888888', 'PWD': 'password'},
+    {'USER': 'weixin', 'PWD': 'weixin'},
     # {'USER': '', 'PWD': ''},
 ]
 
 # 仅查询用户信息不进入答题：积分，抽奖信息等值为'True'，进入答题为'False'
-ONLY_QUERYINFO = True
+ONLY_QUERYINFO = False
 # 查询到的用户信息写入文件值默认为'True',不写入为'False'
 QUERYINFO_WRITE_FILE = True
 QUERYINFO_WRITE_FILE_PATH = 'user_info.txt'
@@ -23,6 +23,9 @@ PAPER_QUESTION_BANK_PATH = r'question_bank\wenzhang.txt'
 # 错题收集本
 WRONG_QUESTIONS_PATH = r'question_bank\wrong_questions.txt'
 
+# 2023 txt题库
+ANSWER_QUESTION_BANK_PATH_2023 = r'question_bank\20230601.txt'
+
 # 随机答对题数,默认全部作答,给定值大于答题数目即可
 # import random;CORRECT_ANSWER_NUM = random.randint(11,16)  #随机取消注释
 # CORRECT_ANSWER_NUM = 15   # 指定确定作答数目
@@ -38,9 +41,9 @@ ADB_DEVICE_SERIAL = "xxxxxxxx"
 
 # 保护官网请求频率，设置随机请求时间
 # 最大间隔请求时间
-MAX_TIME = 5
+MAX_TIME = 1
 # 最小间隔请求时间
-MIN_TIME = 2
+MIN_TIME = 0
 
 # 软件版本
 RE_VERSION = '2022.06.25'
