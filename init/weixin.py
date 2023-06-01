@@ -46,6 +46,7 @@ class WEIXIN:
         barcode_url = URLS['wexin_confirm_request_uuid']['req_url'] + qrcode_uuid
         qr.add_data(barcode_url)
         qr.print_ascii(invert=True)
+        print(qrcode_url['req_url'])
         
         scan_qrcode_sucess = False
         wexin_poll_confirm_request_uuid_url = copy.deepcopy(URLS['wexin_poll_confirm_request_uuid'])
@@ -58,8 +59,6 @@ class WEIXIN:
             res = res_text.find('window.wx_errcode=405;window.wx_code=')
             if res == -1:
                 continue
-            else:
-                print(res_text)
 
             scan_qrcode_sucess = True
             wx_code = res_text.split('=')[-1]
