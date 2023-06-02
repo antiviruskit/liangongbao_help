@@ -5,7 +5,7 @@ import difflib
 import os
 import json
 from LgbConfig import EXCEL_QUESTION_BANK_PATH, ANSWER_QUESTION_BANK_PATH, PAPER_QUESTION_BANK_PATH, WRONG_QUESTIONS_PATH
-from LgbConfig import ANSWER_QUESTION_BANK_PATH_2023
+from LgbConfig import ANSWER_QUESTION_BANK_PATH_2023, ANSWER_QUESTION_BANK_PATH_2023_2
 
 
 def get_equal_rate(str1, str2):
@@ -33,6 +33,18 @@ class FindAnswers:
 
     def open_answer_bank(self):
         with open(ANSWER_QUESTION_BANK_PATH, 'r', encoding='utf-8') as f:
+            reg_str = ".*?([\u4E00-\u9FA5]+).*?"
+            for line in f:
+                if line == '':
+                    continue
+                line = line.strip('\n').split("######")
+                try:
+                    tmp_timu = ''.join(re.findall(reg_str, line[0]))
+                    tmp_daan = json.loads(line[1])
+                except:
+                    continue  # 舍弃
+                self.answer_question_bank.append([tmp_timu, tmp_daan])
+        with open(ANSWER_QUESTION_BANK_PATH_2023_2, 'r', encoding='utf-8') as f:
             reg_str = ".*?([\u4E00-\u9FA5]+).*?"
             for line in f:
                 if line == '':

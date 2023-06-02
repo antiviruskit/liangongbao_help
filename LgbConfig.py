@@ -1,6 +1,6 @@
 # lgb登录账号
 ACCOUNT = [
-    {'USER': 'weixin', 'PWD': 'weixin'},
+    {'USER': 'memberId', 'PWD': 'token'},
     # {'USER': '', 'PWD': ''},
 ]
 
@@ -25,6 +25,7 @@ WRONG_QUESTIONS_PATH = r'question_bank\wrong_questions.txt'
 
 # 2023 txt题库
 ANSWER_QUESTION_BANK_PATH_2023 = r'question_bank\20230601.txt'
+ANSWER_QUESTION_BANK_PATH_2023_2 = r'question_bank\answer_20230602.txt'
 
 # 随机答对题数,默认全部作答,给定值大于答题数目即可
 # import random;CORRECT_ANSWER_NUM = random.randint(11,16)  #随机取消注释

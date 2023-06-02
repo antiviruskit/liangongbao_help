@@ -17,12 +17,21 @@ from LgbConfig import MIN_TIME, MAX_TIME
 
 class WEIXIN:
     def __init__(self) -> None:
+        self.user = ""
+        self.passwd = ""
         self.http_client = HTTPClient()
         self.find_answers = FindAnswers()
         self.answer_ques_num = 0
         self.result_dict = None
 
     def login(self):
+        self.http_client.token = self.passwd
+        self.http_client.memberId = self.user
+        self.result_dict = self.http_client.send(URLS['lgb2023_competition'])
+        if 'isAnswered' in self.result_dict.get('data', []):
+            print("使用token登录")
+            return
+        
         res_text = self.http_client.send(URLS['wexin_request_qrcode'])
         assert isinstance(res_text, str), "错误：" + URLS['wexin_request_qrcode']
         key_str = '<img class="web_qrcode_img" src="/'
@@ -74,6 +83,8 @@ class WEIXIN:
         if status == 20000:
             self.http_client.token = token_dict.get("data").get("uidtok")
             self.http_client.memberId = token_dict.get("data").get("unionId")
+            user_info = {'USER': self.http_client.memberId, 'PWD': self.http_client.token}
+            print("微信登录LGBtoken:", user_info)
             print("登录成功")
         else:
             print(token_dict)
@@ -160,4 +171,6 @@ class WEIXIN:
 
     def main(self, user, passwd):
         self.answer_ques_num = 0
+        self.user = user
+        self.passwd = passwd
         self.task()
