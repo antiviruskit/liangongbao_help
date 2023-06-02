@@ -5,7 +5,7 @@ ACCOUNT = [
 ]
 
 # 仅查询用户信息不进入答题：积分，抽奖信息等值为'True'，进入答题为'False'
-ONLY_QUERYINFO = False
+ONLY_QUERYINFO = True
 # 查询到的用户信息写入文件值默认为'True',不写入为'False'
 QUERYINFO_WRITE_FILE = True
 QUERYINFO_WRITE_FILE_PATH = 'user_info.txt'
@@ -42,9 +42,9 @@ ADB_DEVICE_SERIAL = "xxxxxxxx"
 
 # 保护官网请求频率，设置随机请求时间
 # 最大间隔请求时间
-MAX_TIME = 1
+MAX_TIME = 3
 # 最小间隔请求时间
-MIN_TIME = 0
+MIN_TIME = 1
 
 # 软件版本
 RE_VERSION = '2022.06.25'

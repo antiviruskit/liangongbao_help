@@ -25,13 +25,38 @@ class WEIXIN:
         self.result_dict = None
 
     def login(self):
+        # (1, '["交通运输", "住房和城乡建设", "水利", "民航"]', '多选题', 'JBRsv4MLkgN4MBAM', 
+        # '国务院（  ）等有关部门依照《安全生产法》和其他有关法律、行政法规的规定，在各自的职责范
+        # 围内对有关行业、领域的安全生产工作实施监督管理。', '["交通运输", "住房和城乡建设", "水
+        # 利", "民航"]')
+        # 欢迎来到不值钱的加密题库！enjoy!~~~
+
         self.http_client.token = self.passwd
         self.http_client.memberId = self.user
+        ############ set cookies
+        cookies_list = [
+            {'memberId': self.http_client.token}, 
+            {'token': self.http_client.memberId},
+            {'Hm_lvt_9306f0abcf8c8a8d1948a49bc50d7773': '1685608430,1685698425,1685720892,1685723337'},
+            {'__root_domain_v': '.lgb360.com'},
+            {'_qddaz': 'QD.237085499992560'},
+            {'_qdda': '3-1.1'},
+            {'_qddab': '3-qhc7l2.lieupmp2'},
+            {'_qddac': '3-1.1.qhc7l2.lieupmp2'},
+            {'Hm_lpvt_9306f0abcf8c8a8d1948a49bc50d7773': str(int(time.time()))},
+            {'acw_tc': 'dec0bb1a16857276871764913e81a4bef7ff043ddeb6f3f0a2258ce155'},
+            {'agid': 'ETo7qCmTdLeRsXlWGo3B3o3Elg'}]
+        self.http_client.set_cookies(cookies_list)
+
         self.result_dict = self.http_client.send(URLS['lgb2023_competition'])
-        if 'isAnswered' in self.result_dict.get('data', []):
-            print("使用token登录")
-            return
-        
+        # {'result': {'code': 100, 'msg': '请先登录！'}}
+        if 'data' in self.result_dict:
+            data =  self.result_dict.get('data')
+            if data != {'companyId': '3ed95bfc-fb94-11ed-85d4-0c42a1380d98', 'userCategory': 1, 
+                        'companyName': '中国石油化工集团有限公司', 'isAnswered': True, 'userCode': 10910465, 'points': 10}:
+                print("使用token登录")
+                return  # 持久化token登录
+
         res_text = self.http_client.send(URLS['wexin_request_qrcode'])
         assert isinstance(res_text, str), "错误：" + URLS['wexin_request_qrcode']
         key_str = '<img class="web_qrcode_img" src="/'
@@ -97,8 +122,8 @@ class WEIXIN:
         self.result_dict = self.http_client.send(URLS['lgb2023_start'], data={})
         msg = self.result_dict.get("result").get("msg")
         code = self.result_dict.get("result").get("code")
-        if msg == "每天只能挑战一次哦~" and code == 9:
-            print("每天只能挑战一次哦~")
+        if msg == "您今日挑战已完成，明天再来挑战吧！" or code == 9:
+            print("您今日挑战已完成，明天再来挑战吧！")
             return False
         return True
 
