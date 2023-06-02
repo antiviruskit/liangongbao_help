@@ -40,7 +40,7 @@ class FindAnswers:
                 line = line.strip('\n').split("######")
                 try:
                     tmp_timu = ''.join(re.findall(reg_str, line[0]))
-                    tmp_daan = json.loads(line[1])
+                    tmp_daan = json.loads(line[1].replace('\'', '\"'))
                 except:
                     continue  # 舍弃
                 self.answer_question_bank.append([tmp_timu, tmp_daan])
@@ -52,7 +52,7 @@ class FindAnswers:
                 line = line.strip('\n').split("######")
                 try:
                     tmp_timu = ''.join(re.findall(reg_str, line[0]))
-                    tmp_daan = json.loads(line[1])
+                    tmp_daan = json.loads(line[1].replace('\'', '\"'))
                 except:
                     continue  # 舍弃
                 self.answer_question_bank.append([tmp_timu, tmp_daan])
@@ -194,7 +194,7 @@ class FindAnswers:
                 t_str = ''.join(['文章匹配标注:置信度', str(
                     round(stdout_rate[1]*100.00, 2)) + '%  ', stdout_rate[0]])
                 full_paper_match.append([stdout_rate[1], t_str])
-        os.system("cls")
+        # os.system("cls")
         print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
         print('采集题型:', quesTypeStr)
         print('采集题目:', content)
