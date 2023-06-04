@@ -116,12 +116,12 @@ class WEIXIN:
 
     def start(self) -> bool:
         self.result_dict = self.http_client.send(URLS['lgb2023_competition'])
-        if 'isAnswered' in self.result_dict.get('data'):
+        if 'isAnswered' in self.result_dict.get('data', {}):
             print("每天只能挑战一次哦~")
             return False
         self.result_dict = self.http_client.send(URLS['lgb2023_start'], data={})
-        msg = self.result_dict.get("result").get("msg")
-        code = self.result_dict.get("result").get("code")
+        msg = self.result_dict.get("result", {}).get("msg")
+        code = self.result_dict.get("result", {}).get("code")
         if msg == "您今日挑战已完成，明天再来挑战吧！" or code == 9:
             print("您今日挑战已完成，明天再来挑战吧！")
             return False
@@ -132,12 +132,12 @@ class WEIXIN:
             print("======已达设定最大答题数目,答题结束======")
             return True
         data = self.result_dict.get("data")
-        if not data:
+        if data is None:
             print(self.result_dict)
             print("======服务器返回异常,账号答题结束======")
             return True
         ques = data.get("ques")
-        if not ques:
+        if ques is None:
             print("答题结束")
             return True
         return False
@@ -148,6 +148,9 @@ class WEIXIN:
             data = {"quesId": "%s" % quesid_, "answerOptions": answer_}
             self.result_dict = self.http_client.send(
                 URLS['lgb2023_answer'], data=json.dumps(data))
+            isRight = self.result_dict.get('data', {}).get('isRight')
+            if isRight is None:
+                print(self.result_dict)
             self.answer_ques_num += 1  # 答题数+1
             time.sleep(random.randint(MIN_TIME, MAX_TIME))
 

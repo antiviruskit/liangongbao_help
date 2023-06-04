@@ -7,7 +7,8 @@ ACCOUNT = [
 # 仅查询用户信息不进入答题：积分，抽奖信息等值为'True'，进入答题为'False'
 ONLY_QUERYINFO = True
 # 查询到的用户信息写入文件值默认为'True',不写入为'False'
-QUERYINFO_WRITE_FILE = True
+# 2023未更新
+QUERYINFO_WRITE_FILE = False
 QUERYINFO_WRITE_FILE_PATH = 'user_info.txt'
 
 # 是否自动抽奖，自动抽奖失去快乐 是为True, 否为False
@@ -15,17 +16,13 @@ AUTO_LOTTERY = False
 
 # winodws文件夹分隔符 '\' unix 文件夹分隔符 '/'，可以给绝对路径
 # Excel 题库
-EXCEL_QUESTION_BANK_PATH = r'question_bank\6_21.xls'
+EXCEL_QUESTION_BANK_PATH = r'question_bank\2022_6_21.xls'
 # TXT 题库
-ANSWER_QUESTION_BANK_PATH = r'question_bank\answers.txt'
+ANSWER_QUESTION_BANK_PATH = r'question_bank\2023_answers.txt'
 # 文章 题库
-PAPER_QUESTION_BANK_PATH = r'question_bank\wenzhang.txt'
+PAPER_QUESTION_BANK_PATH = r'question_bank\2022_wenzhang.txt'
 # 错题收集本
 WRONG_QUESTIONS_PATH = r'question_bank\wrong_questions.txt'
-
-# 2023 txt题库
-ANSWER_QUESTION_BANK_PATH_2023 = r'question_bank\20230601.txt'
-ANSWER_QUESTION_BANK_PATH_2023_2 = r'question_bank\answer_20230602.txt'
 
 # 随机答对题数,默认全部作答,给定值大于答题数目即可
 # import random;CORRECT_ANSWER_NUM = random.randint(11,16)  #随机取消注释
@@ -47,4 +44,4 @@ MAX_TIME = 3
 MIN_TIME = 1
 
 # 软件版本
-RE_VERSION = '2022.06.25'
+RE_VERSION = '2023.06.04.11.00'

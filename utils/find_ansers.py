@@ -4,8 +4,8 @@ import re
 import difflib
 import os
 import json
+import jieba
 from LgbConfig import EXCEL_QUESTION_BANK_PATH, ANSWER_QUESTION_BANK_PATH, PAPER_QUESTION_BANK_PATH, WRONG_QUESTIONS_PATH
-from LgbConfig import ANSWER_QUESTION_BANK_PATH_2023, ANSWER_QUESTION_BANK_PATH_2023_2
 
 
 def get_equal_rate(str1, str2):
@@ -16,13 +16,10 @@ class FindAnswers:
     def __init__(self) -> None:
         self.excel_question_bank = None
         self.answer_question_bank = []
-        self.answer_question_bank_2023 = []
-        self.answer_question_bank_2023_word = []
         self.paper_question_bank = []
         self.open_excel_bank()
         self.open_answer_bank()
         self.open_paper_bank()
-        self.open_answer_bank_2023()
 
     def open_excel_bank(self):
         self.excel_question_bank = pd.read_excel(
@@ -44,18 +41,6 @@ class FindAnswers:
                 except:
                     continue  # 舍弃
                 self.answer_question_bank.append([tmp_timu, tmp_daan])
-        with open(ANSWER_QUESTION_BANK_PATH_2023_2, 'r', encoding='utf-8') as f:
-            reg_str = ".*?([\u4E00-\u9FA5]+).*?"
-            for line in f:
-                if line == '':
-                    continue
-                line = line.strip('\n').split("######")
-                try:
-                    tmp_timu = ''.join(re.findall(reg_str, line[0]))
-                    tmp_daan = json.loads(line[1].replace('\'', '\"'))
-                except:
-                    continue  # 舍弃
-                self.answer_question_bank.append([tmp_timu, tmp_daan])
 
     def open_paper_bank(self):
         with open(PAPER_QUESTION_BANK_PATH, 'r', encoding='utf-8') as f:
@@ -64,22 +49,6 @@ class FindAnswers:
                     continue
                 line = line.strip('\n').strip('\u3000\u3000')
                 self.paper_question_bank.append(line)
-
-    def open_answer_bank_2023(self):
-        with open(ANSWER_QUESTION_BANK_PATH_2023, 'r', encoding='utf-8') as f:
-            reg_str = ".*?([\u4E00-\u9FA5]+).*?"
-            for line in f:
-                if line == '':
-                    continue
-                line = line.strip('\n')
-                try:
-                    tmp_dict = json.loads(line)
-                    tmp_timu = ''.join(re.findall(reg_str, tmp_dict['q']))
-                    tmp_daan = self.option2text(tmp_dict['ans'], tmp_dict['a'])
-                except:
-                    continue  # 舍弃
-                self.answer_question_bank_2023.append([tmp_timu, tmp_daan])
-                self.answer_question_bank.extend(self.answer_question_bank_2023) #添加到老题库中
 
     def get_result(self, quesTypeStr, content, answerOptions):
         find_option, find_opt_text = self._find_excel(quesTypeStr, content, answerOptions)
@@ -218,7 +187,6 @@ class FindAnswers:
             print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n')
 
     def find_jieba(self, content):
-        import jieba
         topic_list = self.get_puer_text(content)
         topic_str = jieba.lcut(''.join(topic_list), cut_all=False)
         jieba_confidence = []
@@ -249,4 +217,4 @@ class FindAnswers:
 if __name__ == '__main__':
     test = FindAnswers()
     test.open_answer_bank_2023()
-    print(test.answer_question_bank_2023)
+    print(test.answer_question_bank)
