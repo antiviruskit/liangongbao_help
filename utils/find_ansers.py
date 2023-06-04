@@ -5,7 +5,7 @@ import difflib
 import os
 import json
 import jieba
-from LgbConfig import EXCEL_QUESTION_BANK_PATH, ANSWER_QUESTION_BANK_PATH, PAPER_QUESTION_BANK_PATH, WRONG_QUESTIONS_PATH
+from config.LgbConfig import EXCEL_QUESTION_BANK_PATH, ANSWER_QUESTION_BANK_PATH, PAPER_QUESTION_BANK_PATH, WRONG_QUESTIONS_PATH
 
 
 def get_equal_rate(str1, str2):

@@ -3,7 +3,7 @@ import argparse
 import sys
 import traceback
 import time
-from LgbConfig import ACCOUNT
+from config.LgbConfig import ACCOUNT
 
 
 class Logger(object):
@@ -30,13 +30,15 @@ def parser_arguments():
     """
     parser = argparse.ArgumentParser(description='链工宝让平凡的人懂得安全生产')
     parser.add_argument('-i', '--interface_call', action='store_true',
-                        default=False, help='2022使用接口POST/GET运行')
+                        default=False, help='2023使用手机APP接口POST/GET运行')
     parser.add_argument('-v', '--visualization', action='store_true',
                         default=False, help='2022使用浏览器可视化运行')
     parser.add_argument('-a', '--adb_ocr', action='store_true',
                         default=False, help='2022使用ADB工具连接手机运行')
-    parser.add_argument('-w', '--weixin', action='store_true',
-                        default=False, help='2023使用Wechat登录运行')
+    parser.add_argument('-w', '--webpc', action='store_true',
+                        default=False, help='2023使用Wechat登录网页版运行')
+    parser.add_argument('-g', '--get_wechat_token_mul', action='store_true',
+                        default=False, help='2023获取Wechat登录多个token')
     return parser
 
 
@@ -52,9 +54,13 @@ if __name__ == '__main__':
     elif args.adb_ocr:
         from init.adb_ocr import ADBOCR
         app = ADBOCR()
-    elif args.weixin:
-        from init.weixin import WEIXIN
-        app = WEIXIN()
+    elif args.webpc:
+        from init.webpc import WEBPC
+        app = WEBPC()
+    elif args.get_wechat_token_mul:
+        from init.get_wechat_token_mul import GetWechatTokenMul
+        app = GetWechatTokenMul()
+        ACCOUNT *= 100  # 需要录入的数量
     else:
         parser.print_help()
         sys.exit(0)
@@ -64,13 +70,15 @@ if __name__ == '__main__':
     print('+++++++++++++++++++++++++++++++++++++++++++++')
     print(time.strftime('%Y-%m-%d %H:%M:%S'))
     for ac in ACCOUNT:
-        user = ac.get("USER")
-        passwd = ac.get("PWD")
+        user = ac.get("USER") or ac.get("memberId")
+        passwd = ac.get("PWD") or ac.get("token")
         print("开始答题: ", user, passwd)
         try:
             app.main(user, passwd)
+        except SystemExit:
+            exit(0)
         except:
             traceback.print_exc()
-            if input("还继续答题嘛？ q退出:").upper() == 'Q':
+            if input("还继续嘛？ q退出:").upper() == 'Q':
                 break
-    print("全部用户答题结束！！！")
+    print("程序运行结束！！！")

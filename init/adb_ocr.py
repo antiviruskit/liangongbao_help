@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import pytesseract
 
-from LgbConfig import ADB_DEVICE_SERIAL
+from config.LgbConfig import ADB_DEVICE_SERIAL
 from utils.adb import PyADB
 from utils.find_ansers import FindAnswers
 

@@ -1,6 +1,6 @@
 URLS = {
-    "login": {  # 登录接口
-        "req_url": "https://js.lgb360.com/lgb/user/loginByPassword.do",
+    "savelogin": {  # 持久化登录是否支持接口
+        "req_url": "https://js.lgb360.com/lgb/logon/saveLogin.do",
         "req_type": "post",
         "re_try": 10,
         "re_time": 3,
@@ -10,13 +10,35 @@ URLS = {
             "token": "",
             "memberId": "",
             "mobileTerminal": "0",
-            "appversion": "3.0.6",
-            "User-Agent": "LGB/3.0.6 (HMA-AL00; Android 10; zh_CN_#Hans; e4802ed3-c836-4ba8-822c-51dc9cdac4f8; 3626613241)",
+            "appversion": "3.5.4",
+            "User-Agent": "LGB/3.5.4 (iPhone 12 Pro; iOS 16.3.1; zh_CN; 82f17147-23fd-422b-9c89-cfa1c2ed11ad; 2933677754)",
             "Content-Type": "application/x-www-form-urlencoded",
             "Host": "js.lgb360.com",
             "Connection": "Keep-Alive",
             "Accept-Encoding": "gzip"
         },
+        # {"data":"SUCCESS","message":"成功","status":20000}
+    },
+    "login_check": {  # 检查是否登录
+        "req_url": "https://aqy-adm.lgb360.com/aqy/stu/login/check?uidtok=mytoken&unionId=mymemberId",
+        "req_type": "get",
+        "re_try": 10,
+        "re_time": 3,
+        "s_time": 0.1,
+        "is_json": True,
+        "header": {
+            "token": "",
+            "memberId": "",
+            "mobileTerminal": "0",
+            "appversion": "3.5.4",
+            "User-Agent": "LGB/3.5.4 (iPhone 12 Pro; iOS 16.3.1; zh_CN; 82f17147-23fd-422b-9c89-cfa1c2ed11ad; 2933677754)",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Host": "aqy-adm.lgb360.com",
+            "Connection": "Keep-Alive",
+            "Accept-Encoding": "gzip"
+        },
+        # {"message":"尚未登录","status":0}
+        # {"message":"成功","status":20000}
     },
     "start": {  # 开始答题接口
         "req_url": "https://aqy-app.lgb360.com/aqy/ques/startCompetition",
@@ -111,7 +133,7 @@ URLS = {
         },
     },
     "getrank": {  # 查询排名接口
-        "req_url": "https://aqy-app.lgb360.com/aqy/score/getRank",
+        "req_url": "https://aqy-app.lgb360.com/aqy/score/getRank?date=mydate",
         "req_type": "post",
         "re_try": 10,
         "re_time": 3,

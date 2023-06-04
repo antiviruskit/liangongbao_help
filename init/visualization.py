@@ -10,10 +10,10 @@ from utils.http_utils import HTTPClient
 from utils.find_ansers import FindAnswers
 from utils.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from LgbConfig import CHROME_CHROME_PATH, CHROME_TIMEOUT
-from LgbConfig import MIN_TIME, MAX_TIME
-from LgbConfig import CORRECT_ANSWER_NUM
-from LgbConfig import ONLY_QUERYINFO, QUERYINFO_WRITE_FILE, QUERYINFO_WRITE_FILE_PATH
+from config.LgbConfig import CHROME_CHROME_PATH, CHROME_TIMEOUT
+from config.LgbConfig import MIN_TIME, MAX_TIME
+from config.LgbConfig import CORRECT_ANSWER_NUM
+from config.LgbConfig import ONLY_QUERYINFO, QUERYINFO_WRITE_FILE, QUERYINFO_WRITE_FILE_PATH
 
 
 class Visualization:

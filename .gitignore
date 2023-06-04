@@ -6,9 +6,10 @@ __pycache__
 env.py
 env.slave.py
 env.docker.py
-LgbConfig.py
+# LgbConfig.py
 docker-compose.yml
 wrong_questions.txt
 user_info.txt
 *.log
 question_bank/
+mul_token.txt
