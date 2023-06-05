@@ -6,6 +6,7 @@ import os
 import json
 import jieba
 from config.LgbConfig import EXCEL_QUESTION_BANK_PATH, ANSWER_QUESTION_BANK_PATH, PAPER_QUESTION_BANK_PATH, WRONG_QUESTIONS_PATH
+from config.LgbConfig import QUESTION_BANK_PRIORITY
 
 
 def get_equal_rate(str1, str2):
@@ -30,13 +31,12 @@ class FindAnswers:
 
     def open_answer_bank(self):
         with open(ANSWER_QUESTION_BANK_PATH, 'r', encoding='utf-8') as f:
-            reg_str = ".*?([\u4E00-\u9FA5]+).*?"
             for line in f:
                 if line == '':
                     continue
                 line = line.strip('\n').split("######")
                 try:
-                    tmp_timu = ''.join(re.findall(reg_str, line[0]))
+                    tmp_timu = ''.join(self.get_puer_text(line[0]))
                     tmp_daan = json.loads(line[1].replace('\'', '\"'))
                 except:
                     continue  # 舍弃
@@ -51,12 +51,16 @@ class FindAnswers:
                 self.paper_question_bank.append(line)
 
     def get_result(self, quesTypeStr, content, answerOptions):
-        find_option, find_opt_text = self._find_excel(quesTypeStr, content, answerOptions)
-        if find_option and find_opt_text:
-            return find_option, find_opt_text
-        find_option, find_opt_text = self._find_answer(quesTypeStr, content, answerOptions)
-        if find_option and find_opt_text:
-            return find_option, find_opt_text
+        priority_funtion = {
+            ANSWER_QUESTION_BANK_PATH: self._find_answer,
+            EXCEL_QUESTION_BANK_PATH: self._find_excel,
+            'default': lambda a,b,c: (None, None),
+        }
+        for priority in QUESTION_BANK_PRIORITY:
+            fun = priority_funtion.get(priority, priority_funtion['default'])
+            find_option, find_opt_text = fun(quesTypeStr, content, answerOptions)
+            if all([find_option, find_opt_text]):
+                return find_option, find_opt_text
         delimiter = "######"
         text = quesTypeStr + delimiter + content + delimiter + str(answerOptions)
         self.collection_wrong_questions(text)  # 没找到得题自动加入错题本
@@ -88,11 +92,13 @@ class FindAnswers:
         for i, v in enumerate(answerOptions):
             tmp_dict[v] = chr(65+i)
         for v in answer_match:
-            tmp.append(tmp_dict.get(v))
+            option = tmp_dict.get(v)
+            if option is not None:
+                tmp.append(tmp_dict.get(v))
         return tmp
 
     def get_puer_text(self, content):
-        reg_str = ".*?([\u4E00-\u9FA5]+).*?"  # 提取中文,放弃特殊符号
+        reg_str = ".*?([\u4E00-\u9FA5a-zA-Z0-9]+).*?"  # 提取中文,放弃特殊符号
         return re.findall(reg_str, content)
 
     def _find_excel(self, quesTypeStr, content, answerOptions):

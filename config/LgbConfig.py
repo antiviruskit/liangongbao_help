@@ -23,6 +23,8 @@ EXCEL_QUESTION_BANK_PATH = r'question_bank\2022_6_21.xls'
 ANSWER_QUESTION_BANK_PATH = r'question_bank\2023_answers.txt'
 # 文章 题库
 PAPER_QUESTION_BANK_PATH = r'question_bank\2022_wenzhang.txt'
+# 题库匹配优先级
+QUESTION_BANK_PRIORITY = [ANSWER_QUESTION_BANK_PATH, EXCEL_QUESTION_BANK_PATH]
 # 错题收集本
 WRONG_QUESTIONS_PATH = r'question_bank\wrong_questions.txt'
 
