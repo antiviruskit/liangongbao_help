@@ -2,6 +2,7 @@ import json
 import time
 import datetime
 import random
+import copy
 
 from config.url_conf import URLS
 from utils.http_utils import HTTPClient
@@ -39,12 +40,14 @@ class InterfaceCall:
         return False
 
     def login_check(self) -> bool:
-        URLS['login_check']['req_url'] = URLS['login_check']['req_url'].replace(
+        login_check_url = copy.deepcopy(URLS['login_check'])
+        login_check_url['req_url'] = login_check_url['req_url'].replace(
             'mytoken', self.http_client.token).replace('mymemberId', self.http_client.memberId)
-        self.result_dict = self.http_client.send(URLS['login_check'])
+        self.result_dict = self.http_client.send(login_check_url)
         if "成功" == self.result_dict.get('message') and 20000 == self.result_dict.get('status'):
             print("使用token登录成功")
             return  True # 持久化登录成功
+        print("使用token登录失败", self.result_dict)
         return False
 
     def start(self) -> bool:
@@ -189,6 +192,8 @@ class InterfaceCall:
         self.query_account_info()
         self.http_client.del_cookies()
         self.http_client.rand_ua()
+        del self.http_client
+        self.http_client = HTTPClient()
         time.sleep(random.randint(MIN_TIME, MAX_TIME))
 
     def main(self, user, passwd):

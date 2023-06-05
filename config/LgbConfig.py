@@ -2,7 +2,10 @@
 # 2022年为账号密码 {'USER': 'USER', 'PWD': 'PWD'}
 # 2023年为微信登录获取的tokenid {'memberId': 'memberId', 'token': 'token'}
 ACCOUNT = [
-    {'memberId': 'memberId', 'token': 'token'},
+    # {'memberId': 'memberId', 'token': 'token'},
+    {'memberId': 'oDuuO0fQ9ET6zdcWTU-eVXfCxsJ0', 'token': 'r6G9kWFe9j5Yktz1w88JNHA3jRCz_196'},
+    {'memberId': 'oDuuO0WJ5ylDLy2Y9oPnmeiZbVTg', 'token': 'N-WM2yPCXr5z3ZPmwB_Kc5vYq2OtpHy'},
+
 ]
 
 # 仅查询用户信息不进入答题：积分，抽奖信息等值为'True'，进入答题为'False'
